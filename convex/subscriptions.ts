@@ -4,6 +4,14 @@ import { Webhook, WebhookVerificationError } from "standardwebhooks";
 import { api } from "./_generated/api";
 import { action, httpAction, mutation, query } from "./_generated/server";
 
+// One-time environment sanity log – helps verify Convex has the variables we need
+console.log("ENV sanity", {
+  FRONTEND_URL: process.env.FRONTEND_URL,
+  POLAR_ACCESS_TOKEN: !!process.env.POLAR_ACCESS_TOKEN,
+  POLAR_ORGANIZATION_ID: !!process.env.POLAR_ORGANIZATION_ID,
+  POLAR_SERVER: process.env.POLAR_SERVER,
+});
+
 const createCheckout = async ({
   customerEmail,
   productPriceId,
@@ -25,6 +33,7 @@ const createCheckout = async ({
   });
 
   // Get product ID from price ID
+console.log("Price lookup", { searchedPriceId: productPriceId });
   const { result: productsResult } = await polar.products.list({
     organizationId: process.env.POLAR_ORGANIZATION_ID,
     isArchived: false,
@@ -60,7 +69,14 @@ const createCheckout = async ({
     JSON.stringify(checkoutData, null, 2)
   );
 
-  const result = await polar.checkouts.create(checkoutData);
+  let result;
+  try {
+    result = await polar.checkouts.create(checkoutData);
+    console.log("Checkout created:", result);
+  } catch (error: any) {
+    console.error("polar.checkouts.create failed", error?.response ?? error);
+    throw error;
+  }
   return result;
 };
 
