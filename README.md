@@ -263,4 +263,4 @@ This project is licensed under the MIT License.
 
 **Stop rebuilding the same foundation over and over.** RSK eliminates months of integration work by providing a complete, production-ready SaaS template with authentication, payments, AI chat, and real-time data working seamlessly out of the box.
 
-Built with ❤️ using React Router v7, Convex, Clerk, Polar.sh, and OpenAI.
+Built with ❤️ using React Router v7, Convex, Clerk, Polar.sh, and OpenAI.# react-starter-kit
