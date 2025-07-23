@@ -14,3 +14,6 @@ start ngrok by running ``` ngrok http 5173 ```
   }
 });
 ```
+
+
+when subscription wasn't working because error pops up when I click subscribe before entering credit card number page, I found out that it was because of env variable not set. see: "npx convex env set FRONTEND_URL http://localhost:5174" just do this and it would work

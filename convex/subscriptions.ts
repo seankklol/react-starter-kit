@@ -54,6 +54,8 @@ console.log("Price lookup", { searchedPriceId: productPriceId });
     throw new Error(`Product not found for price ID: ${productPriceId}`);
   }
 
+  console.log("Product resolution", { productId, productPriceId });
+
   const checkoutData = {
     products: [productId],
     successUrl: successUrl,
@@ -156,6 +158,10 @@ export const createCheckoutSession = action({
       throw new Error("Not authenticated");
     }
 
+    console.log("CheckoutSession args", args, {
+      identity: identity?.subject,
+    });
+
     // First check if user exists
     let user = await ctx.runQuery(api.users.findUserByToken, {
       tokenIdentifier: identity.subject,
@@ -170,10 +176,16 @@ export const createCheckoutSession = action({
       }
     }
 
+    const successUrl = `${process.env.FRONTEND_URL}/success`;
+    console.log("Success URL build", {
+      FRONTEND_URL: process.env.FRONTEND_URL,
+      successUrl,
+    });
+
     const checkout = await createCheckout({
       customerEmail: user.email!,
       productPriceId: args.priceId,
-      successUrl: `${process.env.FRONTEND_URL}/success`,
+      successUrl,
       metadata: {
         userId: user.tokenIdentifier,
       },
